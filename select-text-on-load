@@ -1,0 +1,49 @@
+<html>
+<div id="target" class="click-me">
+    <p id="p1" data-key="1">Some text goes here!</p>
+</div>
+</html>
+<script>
+    function selectText(node) {
+        node = document.getElementById(node);
+
+        if (document.body.createTextRange) {
+            const range = document.body.createTextRange();
+            range.moveToElementText(node);
+            range.select();
+        } else if (window.getSelection) {
+            const selection = window.getSelection();
+            const range = objToRange();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else {
+            console.warn("Could not select text in node: Unsupported browser.");
+        }
+    }
+
+    function objToRange() {,
+        range = document.createRange();
+        range.setStart(document.querySelector('[data-key="' +1 + '"]').childNodes[0], 10);
+        range.setEnd(document.querySelector('[data-key="' + 1 + '"]').childNodes[0], 16);
+        return range;
+    }
+
+    function rangeToObj(range) {
+        return {
+            startKey: range.startContainer.parentNode.dataset.key,
+            startTextIndex: Array.prototype.indexOf.call(range.startContainer.parentNode.childNodes, range.startContainer),
+            endKey: range.endContainer.parentNode.dataset.key,
+            endTextIndex: Array.prototype.indexOf.call(range.endContainer.parentNode.childNodes, range.endContainer),
+            startOffset: range.startOffset,
+            endOffset: range.endOffset
+        }
+    }
+
+
+
+
+    selectText('p1');
+
+    const clickable = document.querySelector('.click-me');
+    clickable.addEventListener('click', ()=>selectText('p3'));
+</script>
